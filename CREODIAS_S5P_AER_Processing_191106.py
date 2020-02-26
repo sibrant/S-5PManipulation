@@ -22,7 +22,7 @@ from Harp_Proc_Function import harpProc
 #set date range
 dates = pd.date_range(start='20191201', end='today')
 #weekly timerange
-dates = pd.date_range(start='20191001', end='today', freq = 'CW')
+dates = pd.date_range(start='20200112', end='today', freq = '2D')
 
 #choose r5solution in degrees
 res = 0.05
@@ -30,7 +30,13 @@ res = 0.25
 
 
 # import json
-geoj = 'india.geojson'
+geoj = 'aus.geojson'
+
+proj_dir = f'''export_{geoj.split('.')[0]}'''
+
+if os.path.exists(proj_dir):
+    shutil.rmtree(proj_dir)
+os.mkdir(proj_dir)
 
 prod = 'L2__AER_AI'
 #prod = 'L2__SO2___'
@@ -38,7 +44,7 @@ prod = 'L2__NO2___'
 prod = 'L2__CO____'
 
 #set export directory
-exp_dir = 'export_aus/NO2'
+exp_dir = f'{proj_dir}/{prod}'
 
 if os.path.exists(exp_dir):
     shutil.rmtree(exp_dir)
@@ -62,7 +68,7 @@ for i in dates:
     
     paths = s5psearch(geoj = geoj, dateSt = i, dateEnd = i, prod = prod)
     
-    harpProc(pathlist = paths, prod = prod, bb = bb, res = res, date = i, exp_dir = exp_dir)
+    harpProc(pathlist = paths, prod = prod, bb = bb, res = res, dateSt = i, dateEnd = i, exp_dir = exp_dir)
     
     print(i)
 
@@ -71,7 +77,7 @@ for i in dates:
     
     paths = s5psearch(geoj = geoj, dateSt = i, dateEnd = (i + 1), prod = prod)
     
-    harpProc(pathlist = paths, prod = prod, bb = bb, res = res, date = i, exp_dir = exp_dir)
+    harpProc(pathlist = paths, prod = prod, bb = bb, res = res, dateSt = i, dateEnd = (i + 1), exp_dir = exp_dir)
         
     print(i)
     
